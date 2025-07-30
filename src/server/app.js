@@ -444,8 +444,12 @@ class PDFServer {
                         a.click();
                         window.URL.revokeObjectURL(url);
                     } else {
-                        const error = await response.json();
-                        alert('Error: ' + error.message);
+                        try {
+                            const error = await response.json();
+                            alert('Error: ' + (error.message || error.error || 'Unknown error'));
+                        } catch (parseError) {
+                            alert('Error: ' + response.statusText);
+                        }
                     }
                 } catch (error) {
                     alert('Error: ' + error.message);
@@ -485,8 +489,12 @@ class PDFServer {
                         a.click();
                         window.URL.revokeObjectURL(url);
                     } else {
-                        const error = await response.json();
-                        alert('Error: ' + error.message);
+                        try {
+                            const error = await response.json();
+                            alert('Error: ' + (error.message || error.error || 'Unknown error'));
+                        } catch (parseError) {
+                            alert('Error: ' + response.statusText);
+                        }
                     }
                 } catch (error) {
                     alert('Error: ' + error.message);
