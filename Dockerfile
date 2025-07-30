@@ -14,6 +14,8 @@ RUN apk add --no-cache \
 # Tell Puppeteer to skip downloading Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV HOST=0.0.0.0
+ENV PORT=3000
 
 WORKDIR /app
 
