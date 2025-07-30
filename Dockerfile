@@ -1,70 +1,44 @@
+# Faster Dockerfile for Render deployment
 FROM node:18-slim
 
-# Install dependencies for Puppeteer
+# Install only essential dependencies
 RUN apt-get update && apt-get install -y \
     wget \
+    gnupg \
     ca-certificates \
-    fonts-liberation \
-    libappindicator3-1 \
-    libasound2 \
-    libatk-bridge2.0-0 \
-    libatk1.0-0 \
-    libc6 \
-    libcairo2 \
-    libcups2 \
-    libdbus-1-3 \
-    libexpat1 \
-    libfontconfig1 \
-    libgcc1 \
-    libgconf-2-4 \
-    libgdk-pixbuf2.0-0 \
-    libglib2.0-0 \
-    libgtk-3-0 \
-    libnspr4 \
-    libnss3 \
-    libpango-1.0-0 \
-    libpangocairo-1.0-0 \
-    libstdc++6 \
-    libx11-6 \
-    libx11-xcb1 \
-    libxcb1 \
-    libxcomposite1 \
-    libxcursor1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxi6 \
-    libxrandr2 \
-    libxrender1 \
-    libxss1 \
-    libxtst6 \
-    lsb-release \
-    xdg-utils \
+    --no-install-recommends
+
+# Add Google Chrome repository and install Chrome
+RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add - \
+    && echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
     --no-install-recommends \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Set up working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files first (for better caching)
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install dependencies with timeout and retries
+RUN npm ci --only=production --timeout=300000 --retry=3
 
-# Copy source code
+# Copy application code
 COPY . .
 
-# Create non-root user for security
-RUN groupadd -r appuser && useradd -r -g appuser -G audio,video appuser
-RUN chown -R appuser:appuser /app
+# Create non-root user
+RUN groupadd -r appuser && useradd -r -g appuser -G audio,video appuser \
+    && mkdir -p /home/appuser/Downloads \
+    && chown -R appuser:appuser /app /home/appuser
+
+# Set Chrome path for Puppeteer
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+
 USER appuser
 
-# Expose port
 EXPOSE 3000
 
-# Set environment variable for Puppeteer
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome-stable
-
-# Start the application
-CMD ["npm", "start"]
+CMD ["npm", "start", "--", "--server"]
