@@ -1,0 +1,25 @@
+{
+  "pdf": {
+    "format": "A4",
+    "margin": {
+      "top": "1cm",
+      "right": "1cm",
+      "bottom": "1cm",
+      "left": "1cm"
+    },
+    "printBackground": true,
+    "preferCSSPageSize": true,
+    "displayHeaderFooter": false,
+    "headerTemplate": "",
+    "footerTemplate": ""
+  },
+  "server": {
+    "port": 3000,
+    "host": "localhost"
+  },
+  "conversion": {
+    "autoDetect": true,
+    "defaultType": "text",
+    "maxFileSize": "10MB"
+  }
+}

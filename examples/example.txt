@@ -1,0 +1,7 @@
+This is a simple text document.
+
+It contains multiple paragraphs to demonstrate
+how plain text is converted to PDF format.
+
+The converter will automatically format line breaks
+and create a clean, readable document.

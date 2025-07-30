@@ -1,0 +1,44 @@
+{
+  "title": "Sample User Data",
+  "description": "This is a test JSON document for PDF conversion",
+  "users": [
+    {
+      "id": 1,
+      "name": "Alice Johnson",
+      "age": 30,
+      "role": "Developer",
+      "skills": ["JavaScript", "Python", "React"],
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "Bob Smith",
+      "age": 25,
+      "role": "Designer",
+      "skills": ["Figma", "Photoshop", "CSS"],
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "Charlie Brown",
+      "age": 35,
+      "role": "Manager",
+      "skills": ["Leadership", "Strategy", "Communication"],
+      "active": false
+    }
+  ],
+  "settings": {
+    "theme": "dark",
+    "language": "en",
+    "notifications": {
+      "email": true,
+      "sms": false,
+      "push": true
+    }
+  },
+  "metadata": {
+    "created": "2024-01-15",
+    "version": "1.2.0",
+    "author": "PDF Generator Test"
+  }
+}
