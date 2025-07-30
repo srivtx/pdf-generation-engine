@@ -499,6 +499,7 @@ class PDFServer {
           reject(error);
         } else {
           logProgress(`Server running at http://${serverHost}:${serverPort}`, 'success');
+          console.log(`✅ Server bound to ${serverHost}:${serverPort} for Render`);
           resolve({ port: serverPort, host: serverHost });
         }
       });
