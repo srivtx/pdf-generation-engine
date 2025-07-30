@@ -25,7 +25,9 @@ COPY package*.json ./
 
 # Install dependencies with timeout and retries - SKIP Puppeteer Chrome download
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-RUN npm ci --only=production --timeout=300000 --retry=3
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+RUN npm ci --omit=dev --timeout=300000 --retry=3 --verbose
 
 # Copy application code
 COPY . .
@@ -34,9 +36,6 @@ COPY . .
 RUN groupadd -r appuser && useradd -r -g appuser -G audio,video appuser \
     && mkdir -p /home/appuser/Downloads \
     && chown -R appuser:appuser /app /home/appuser
-
-# Set Chrome path for Puppeteer
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 
 USER appuser
 
