@@ -1,0 +1,16 @@
+app:
+  name: pdf-generation-engine
+  services:
+    - name: web
+      git:
+        url: https://github.com/srivtx/pdf-generation-engine
+        branch: main
+      instance_type: nano
+      ports:
+        - port: 3000
+          protocol: http
+      env:
+        - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+          value: "true"
+        - key: PUPPETEER_EXECUTABLE_PATH
+          value: "/usr/bin/google-chrome-stable"
