@@ -241,8 +241,11 @@ class PDFServer {
             label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
             input, select, textarea { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; }
             textarea { height: 150px; resize: vertical; }
-            button { background: #007acc; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; }
+            button { background: #007acc; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; cursor: pointer; position: relative; }
             button:hover { background: #005a9a; }
+            button:disabled { background: #ccc; cursor: not-allowed; }
+            .spinner { display: none; width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #007acc; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; }
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
             .example { background: #f8f9fa; padding: 1rem; border-radius: 4px; margin: 0.5rem 0; }
             .tabs { display: flex; margin-bottom: 1rem; }
             .tab { padding: 0.5rem 1rem; background: #f8f9fa; border: 1px solid #ddd; cursor: pointer; }
@@ -301,7 +304,10 @@ class PDFServer {
                             <input type="text" id="title" name="title" placeholder="My Document">
                         </div>
                         
-                        <button type="submit">Generate PDF</button>
+                        <button type="submit" id="convertBtn">
+                            <span class="spinner" id="convertSpinner"></span>
+                            <span id="convertText">Generate PDF</span>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -326,7 +332,10 @@ class PDFServer {
                             </select>
                         </div>
                         
-                        <button type="submit">Upload & Convert</button>
+                        <button type="submit" id="uploadBtn">
+                            <span class="spinner" id="uploadSpinner"></span>
+                            <span id="uploadText">Upload & Convert</span>
+                        </button>
                     </form>
                 </div>
             </div>
@@ -392,6 +401,15 @@ class PDFServer {
             
             document.getElementById('convertForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                // Show spinner
+                const btn = document.getElementById('convertBtn');
+                const spinner = document.getElementById('convertSpinner');
+                const text = document.getElementById('convertText');
+                btn.disabled = true;
+                spinner.style.display = 'inline-block';
+                text.textContent = 'Generating...';
+                
                 const formData = new FormData(e.target);
                 const data = {
                     content: formData.get('content'),
@@ -431,11 +449,25 @@ class PDFServer {
                     }
                 } catch (error) {
                     alert('Error: ' + error.message);
+                } finally {
+                    // Hide spinner
+                    btn.disabled = false;
+                    spinner.style.display = 'none';
+                    text.textContent = 'Generate PDF';
                 }
             });
             
             document.getElementById('uploadForm').addEventListener('submit', async (e) => {
                 e.preventDefault();
+                
+                // Show spinner
+                const btn = document.getElementById('uploadBtn');
+                const spinner = document.getElementById('uploadSpinner');
+                const text = document.getElementById('uploadText');
+                btn.disabled = true;
+                spinner.style.display = 'inline-block';
+                text.textContent = 'Converting...';
+                
                 const formData = new FormData(e.target);
                 
                 try {
@@ -458,6 +490,11 @@ class PDFServer {
                     }
                 } catch (error) {
                     alert('Error: ' + error.message);
+                } finally {
+                    // Hide spinner
+                    btn.disabled = false;
+                    spinner.style.display = 'none';
+                    text.textContent = 'Upload & Convert';
                 }
             });
         </script>
