@@ -23,7 +23,8 @@ WORKDIR /app
 # Copy package files first (for better caching)
 COPY package*.json ./
 
-# Install dependencies with timeout and retries
+# Install dependencies with timeout and retries - SKIP Puppeteer Chrome download
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 RUN npm ci --only=production --timeout=300000 --retry=3
 
 # Copy application code
