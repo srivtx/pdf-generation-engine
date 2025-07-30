@@ -522,7 +522,7 @@ class PDFServer {
 export async function startServer(pdfEngine, config = {}) {
   const server = new PDFServer(pdfEngine, config);
   const port = config.port || 3000;
-  const host = config.host || 'localhost';
+  const host = config.host || '0.0.0.0';
   
   await server.start(port, host);
   
